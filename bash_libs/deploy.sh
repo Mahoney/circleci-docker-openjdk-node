@@ -3,7 +3,7 @@
 set -ueo pipefail
 IFS=$'\n\t'
 
-source $(dirname "$0")/bash_libs/get_version.sh
+source $(dirname "$0")/get_version.sh
 
 new_version=$(get_version)
 
