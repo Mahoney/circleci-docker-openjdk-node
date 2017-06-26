@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -uexo pipefail
+set -ueo pipefail
 IFS=$'\n\t'
 
 source $(dirname "$0")/get_version.sh
