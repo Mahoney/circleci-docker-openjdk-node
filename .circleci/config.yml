@@ -1,0 +1,13 @@
+version: 2
+jobs:
+ build:
+   working_directory: /home/circleci/leisure-monitoring
+   docker:
+     - image: circleci/node:6.11
+   steps:
+     - checkout
+     - setup_remote_docker
+     - run: sudo npm install --global semver
+     - run: DOCKER_REPO=teviotia DOCKER_ARTIFACT=circleci-docker-openjdk-node ./bash_libs/build.sh
+     - deploy:
+         command: DOCKER_REPO=teviotia DOCKER_ARTIFACT=circleci-docker-openjdk-node ./bash_libs/deploy.sh
