@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source $(dirname "$0")/bash_libs/require.sh
+source $(dirname "$0")/require.sh
 
 function get_version() {
 

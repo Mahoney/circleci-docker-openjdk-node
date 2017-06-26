@@ -5,6 +5,6 @@ RUN cd ~ && \
     sudo bash nodesource_setup.sh && \
     sudo apt-get install nodejs=6.11.0-1nodesource1~jessie1
 
-RUN sudo npm install --global semver
+RUN sudo npm install --global semver@5.3.0
 
 ADD bash_libs ~/bash_libs
