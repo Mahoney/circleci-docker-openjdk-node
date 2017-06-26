@@ -4,13 +4,13 @@ jobs:
    working_directory: /home/circleci/leisure-monitoring
    docker:
      - image: circleci/node:6.11
+   environment:
+     - DOCKER_REPO: teviotia
+     - DOCKER_ARTIFACT: circleci-docker-openjdk-node
    steps:
      - checkout
      - setup_remote_docker
      - run: sudo npm install --global semver@5.3.0
-     - environment:
-         - DOCKER_REPO: teviotia
-         - DOCKER_ARTIFACT: circleci-docker-openjdk-node
      - run: ./bash_libs/build.sh
      - deploy:
          command: ./bash_libs/deploy.sh
