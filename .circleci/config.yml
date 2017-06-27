@@ -1,7 +1,7 @@
 version: 2
 jobs:
  build:
-   working_directory: /home/circleci/leisure-monitoring
+   working_directory: /home/circleci/circleci-docker-openjdk-node
    docker:
      - image: circleci/node:6.11
    environment:

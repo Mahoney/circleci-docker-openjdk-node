@@ -7,4 +7,4 @@ RUN cd ~ && \
 
 RUN sudo npm install --global semver@5.3.0
 
-ADD bash_libs ~/bash_libs
+ADD bash_libs /home/circleci/bash_libs
