@@ -15,7 +15,7 @@ docker_image_versioned="$docker_image:$new_version"
 git tag -a "$new_version" -m "Release version $new_version"
 
 docker tag "$docker_image_latest" "$docker_image_versioned"
-docker login -u "$DOCKER_ID" -p "$DOCKER_PASSWORD" "$docker_registry"
+docker login -u "$DOCKER_ID" -p "$DOCKER_PASSWORD" ${DOCKER_REGISTRY:-""}
 docker push "$docker_image_latest"
 docker push "$docker_image_versioned"
 git push origin "$new_version"
