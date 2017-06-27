@@ -4,16 +4,10 @@ set -ueo pipefail
 IFS=$'\n\t'
 
 source $(dirname "$0")/get_version.sh
+source $(dirname "$0")/docker.sh
 
 new_version=$(get_version)
-
-docker_registry=${DOCKER_REGISTRY:-""}
-
-if [ -z "$docker_registry" ]; then
-  docker_image="$DOCKER_REPO/$DOCKER_ARTIFACT"
-else
-  docker_image="$docker_registry/$DOCKER_REPO/$DOCKER_ARTIFACT"
-fi
+docker_image=$(calc_docker_image)
 
 docker_image_latest="$docker_image:latest"
 docker_image_versioned="$docker_image:$new_version"

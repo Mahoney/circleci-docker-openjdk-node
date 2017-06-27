@@ -3,4 +3,7 @@
 set -ueo pipefail
 IFS=$'\n\t'
 
-docker build -t "$DOCKER_REPO/$DOCKER_ARTIFACT:latest" .
+source $(dirname "$0")/docker.sh
+docker_image=$(calc_docker_image)
+
+docker build -t "$docker_image:latest" .
