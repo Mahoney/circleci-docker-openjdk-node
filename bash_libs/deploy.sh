@@ -15,7 +15,6 @@ else
   docker_image="$docker_registry/$DOCKER_REPO/$DOCKER_ARTIFACT"
 fi
 
-docker_image="$DOCKER_REPO/$DOCKER_ARTIFACT"
 docker_image_latest="$docker_image:latest"
 docker_image_versioned="$docker_image:$new_version"
 
