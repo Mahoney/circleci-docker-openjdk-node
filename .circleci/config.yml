@@ -16,4 +16,4 @@ jobs:
          command: |
            git config --global user.email "circleci@example.com"
            git config --global user.name "Circle CI"
-           ./bash_libs/deploy.sh
+           ./bash_libs/deploy-to-repo.sh
