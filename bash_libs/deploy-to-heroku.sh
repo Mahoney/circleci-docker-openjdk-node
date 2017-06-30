@@ -5,10 +5,9 @@ IFS=$'\n\t'
 
 source $(dirname "$0")/get_version.sh
 
-new_version=$1
+docker_image_versioned=$1
 app_env=$2
 
-docker_image_versioned="registry.heroku.com/$DOCKER_REPO/$DOCKER_ARTIFACT:$new_version"
 web_tag="registry.heroku.com/${app_env}-${DOCKER_REPO}/web"
 
 docker login -u "$DOCKER_ID" -p "$DOCKER_PASSWORD" registry.heroku.com
