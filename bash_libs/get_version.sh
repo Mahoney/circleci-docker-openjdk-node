@@ -6,7 +6,7 @@ function get_version() {
 
   require semver "To fix: npm install --global semver"
 
-  git fetch --tags
+  git fetch --tags > /dev/null
 
   local all_tags=$(git tag -l)
   if [ -z "$all_tags" ]; then

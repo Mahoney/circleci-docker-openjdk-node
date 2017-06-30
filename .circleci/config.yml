@@ -10,10 +10,12 @@ jobs:
    steps:
      - checkout
      - setup_remote_docker
+     - run: |
+         git config --global user.email "circleci@example.com"
+         git config --global user.name "Circle CI"
      - run: sudo npm install --global semver@5.3.0
-     - run: ./bash_libs/build.sh
+     - run: docker build -t "circleci-docker-openjdk-node:latest" .
      - deploy:
-         command: |
-           git config --global user.email "circleci@example.com"
-           git config --global user.name "Circle CI"
-           ./bash_libs/deploy-to-repo.sh
+         command: ./bash_libs/tag-version.sh > ~/.build_version
+     - deploy:
+         command: ./bash_libs/deploy-to-repo.sh "circleci-docker-openjdk-node:latest" "$(cat ~/.build_version)"

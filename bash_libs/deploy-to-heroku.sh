@@ -3,19 +3,15 @@
 set -ueo pipefail
 IFS=$'\n\t'
 
-source $(dirname "$0")/get_version.sh
-
 docker_image_versioned=$1
 app_env=$2
 
-web_tag="registry.heroku.com/${app_env}-${DOCKER_REPO}/web"
+heroku_docker_registry="registry.heroku.com"
 
-docker login -u "$DOCKER_ID" -p "$DOCKER_PASSWORD" registry.heroku.com
+docker login -u "$DOCKER_ID" -p "$DOCKER_PASSWORD" "$heroku_docker_registry"
+
 docker pull "$docker_image_versioned"
+
+web_tag="${heroku_docker_registry}/${app_env}-${DOCKER_REPO}/web"
 docker tag "$docker_image_versioned" "$web_tag"
 docker push "$web_tag"
-
-git checkout $new_version
-git tag -a -f "running_in_${app_env}" -m ""
-git tag -a -f "deployed_to_${app_env}_$(date -u +"%Y-%m-%dT%H-%M")" -m "Deployed to ${app_env} by CD"
-git push --tags
