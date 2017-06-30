@@ -5,6 +5,15 @@ IFS=$'\n\t'
 
 docker_image_versioned=$1
 app_env=$2
+base_heroku_project=$3
+
+heroku_project="${app_env}-${base_heroku_project}"
+new_env=false
+
+if ! heroku apps:info "$heroku_project" > /dev/null 2>&1; then
+  heroku apps:create "$heroku_project" --region eu
+  new_env=true
+fi
 
 heroku_docker_registry="registry.heroku.com"
 
@@ -12,6 +21,10 @@ docker login -u "$DOCKER_ID" -p "$DOCKER_PASSWORD" "$heroku_docker_registry"
 
 docker pull "$docker_image_versioned"
 
-web_tag="${heroku_docker_registry}/${app_env}-${DOCKER_REPO}/web"
+web_tag="${heroku_docker_registry}/${heroku_project}/web"
 docker tag "$docker_image_versioned" "$web_tag"
 docker push "$web_tag"
+
+if [ "$new_env" = true ] ; then
+  heroku ps:scale web=2
+fi
