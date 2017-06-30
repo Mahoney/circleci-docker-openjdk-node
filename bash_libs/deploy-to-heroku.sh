@@ -10,6 +10,8 @@ base_heroku_project=$3
 heroku_project="${app_env}-${base_heroku_project}"
 new_env=false
 
+: ${HEROKU_API_KEY:?"Need to set HEROKU_API_KEY env var to interact with heroku"}
+
 if ! heroku apps:info "$heroku_project" > /dev/null 2>&1; then
   heroku apps:create "$heroku_project" --region eu
   new_env=true
