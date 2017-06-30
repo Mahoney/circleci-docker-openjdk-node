@@ -14,8 +14,8 @@ jobs:
          git config --global user.email "circleci@example.com"
          git config --global user.name "Circle CI"
      - run: sudo npm install --global semver@5.3.0
-     - run: docker build -t "circleci-docker-openjdk-node:latest" .
+     - run: docker build -t "${DOCKER_ARTIFACT}:latest" .
      - deploy:
          command: ./bash_libs/tag-version.sh > ~/.build_version
      - deploy:
-         command: ./bash_libs/deploy-to-repo.sh "circleci-docker-openjdk-node:latest" "$(cat ~/.build_version)"
+         command: ./bash_libs/deploy-to-repo.sh "${DOCKER_ARTIFACT}:latest" "$(cat ~/.build_version)" > ~/.docker_image_versioned
