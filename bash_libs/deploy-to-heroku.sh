@@ -28,5 +28,5 @@ docker tag "$docker_image_versioned" "$web_tag"
 docker push "$web_tag"
 
 if [ "$new_env" = true ] ; then
-  heroku ps:scale web=2
+  heroku ps:scale web=1 -a "$heroku_project"
 fi
