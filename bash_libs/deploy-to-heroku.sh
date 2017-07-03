@@ -6,6 +6,7 @@ IFS=$'\n\t'
 docker_image_versioned=$1
 app_env=$2
 base_heroku_project=$3
+base_domain_name=$4
 
 heroku_project="${app_env}-${base_heroku_project}"
 new_env=false
@@ -28,5 +29,6 @@ docker tag "$docker_image_versioned" "$web_tag"
 docker push "$web_tag"
 
 if [ "$new_env" = true ] ; then
-  heroku ps:scale web=1 -a "$heroku_project"
+  heroku ps:scale web=1:Hobby -a "$heroku_project"
+  heroku domains:add "${app_env}.${base_domain_name}" -a "$heroku_project"
 fi
