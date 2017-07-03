@@ -10,3 +10,5 @@ RUN sudo npm install --global semver@5.3.0
 ADD bash_libs /home/circleci/bash_libs
 
 RUN wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
+
+RUN echo if [ -f /var/run/docker.sock ]; then sudo chown circleci:circleci /var/run/docker.sock; fi >> /home/circleci/.bashrc
