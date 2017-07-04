@@ -14,7 +14,7 @@ new_env=false
 : ${HEROKU_API_KEY:?"Need to set HEROKU_API_KEY env var to interact with heroku"}
 
 if ! heroku apps:info "$heroku_project" > /dev/null 2>&1; then
-  heroku apps:create "$heroku_project" --region eu
+  heroku apps:create "$heroku_project" --no-remote --region eu
   new_env=true
 fi
 
