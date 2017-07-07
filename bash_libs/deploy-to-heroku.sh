@@ -23,7 +23,9 @@ heroku_docker_registry="registry.heroku.com"
 
 docker login -u "$DOCKER_ID" -p "$DOCKER_PASSWORD" "$heroku_docker_registry"
 
+set +e
 docker pull "$docker_image_versioned"
+set -e
 
 web_tag="${heroku_docker_registry}/${heroku_project}/web"
 docker tag "$docker_image_versioned" "$web_tag"
