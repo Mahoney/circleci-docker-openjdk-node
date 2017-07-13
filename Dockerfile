@@ -9,7 +9,13 @@ RUN sudo npm install --global semver@5.3.0
 
 RUN wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
 
-RUN echo "if [ -e /var/run/docker.sock ]; then sudo chown circleci:circleci /var/run/docker.sock; fi" >> /home/circleci/.bashrc
+USER root
+RUN sudo echo 'circleci ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/50-circleci
+USER circleci
+
+ADD entrypoint.sh /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # Should always be the last line as it is the one that will change most regularly
 ADD bash_libs /home/circleci/bash_libs
