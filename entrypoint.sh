@@ -38,7 +38,15 @@ function addUser {
   local other_groups=${@:5}
 
   set +e
-    sudo useradd -g $group_id -u "$id" -G $other_groups $name
+    sudo useradd -M -g $group_id -u "$id" -G $other_groups $name
+    if [ ! -e "/home/$name" ]; then
+      sudo mkdir -p "/home/$name"
+    fi
+    if [ -d "/home/$name" ]; then
+      sudo chown "$name" "/home/$name"
+      sudo chgrp "$group_id" "/home/$name"
+      sudo chmod 755 "/home/$name"
+    fi
   set -e
 }
 
