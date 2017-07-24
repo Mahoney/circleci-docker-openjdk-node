@@ -37,7 +37,14 @@ function addUser {
   local group_name=$4
   local other_groups=${@:5}
 
-  set +e
+  if id -u $name > /dev/null 2>&1; then
+    local existing_id=$(id -u $name)
+    if $existing_id != $id; then
+      usermod -u $id $name
+      find / -user $existing_id -exec chown -h $id {} \;
+    fi
+    usermod -G "${group_name},${other_groups}" $name
+  else
     sudo useradd -M -g $group_id -u "$id" -G $other_groups $name
     if [ ! -e "/home/$name" ]; then
       sudo mkdir -p "/home/$name"
@@ -47,7 +54,7 @@ function addUser {
       sudo chgrp "$group_id" "/home/$name"
       sudo chmod 755 "/home/$name"
     fi
-  set -e
+  fi
 }
 
 function getField {
