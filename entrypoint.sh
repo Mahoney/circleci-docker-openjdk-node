@@ -39,7 +39,7 @@ function addUser {
 
   if id -u $name > /dev/null 2>&1; then
     local existing_id=$(id -u $name)
-    if $existing_id != $id; then
+    if [ $existing_id != $id ]; then
       sudo usermod -u $id $name
       sudo find / -user $existing_id -exec chown -h $id {} \;
     fi
