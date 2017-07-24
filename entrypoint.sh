@@ -40,10 +40,10 @@ function addUser {
   if id -u $name > /dev/null 2>&1; then
     local existing_id=$(id -u $name)
     if $existing_id != $id; then
-      usermod -u $id $name
-      find / -user $existing_id -exec chown -h $id {} \;
+      sudo usermod -u $id $name
+      sudo find / -user $existing_id -exec chown -h $id {} \;
     fi
-    usermod -G "${group_name},${other_groups}" $name
+    sudo usermod -G "${group_name},${other_groups}" $name
   else
     sudo useradd -M -g $group_id -u "$id" -G $other_groups $name
     if [ ! -e "/home/$name" ]; then
