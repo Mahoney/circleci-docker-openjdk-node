@@ -1,17 +1,28 @@
-FROM circleci/openjdk:8u131-jdk-browsers
+FROM openjdk:8u131
 
-RUN cd ~ && \
-    curl -sL https://deb.nodesource.com/setup_6.x -o nodesource_setup.sh && \
-    sudo bash nodesource_setup.sh && \
-    sudo apt-get install nodejs=6.*
+RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90circleci && \
+    echo 'DPkg::Options "--force-confnew";' >> /etc/apt/apt.conf.d/90circleci  && \
+    apt-get update && \
+    apt-get install apt-transport-https lsb-release > /dev/null 2>&1
 
-RUN sudo npm install --global semver@5.3.0
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
+    echo "deb https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list && \
+    apt-get update && \
+    apt-get install docker-ce
+
+RUN JQ_URL=$(curl --location --fail --retry 3 https://api.github.com/repos/stedolan/jq/releases/latest  | grep browser_download_url | grep '/jq-linux64"' | grep -o -e 'https.*jq-linux64') \
+  && curl --silent --show-error --location --fail --retry 3 --output /usr/bin/jq $JQ_URL \
+  && chmod +x /usr/bin/jq
+
+RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add - && \
+    echo 'deb https://deb.nodesource.com/node_6.x stretch main' > /etc/apt/sources.list.d/nodesource.list && \
+    echo 'deb-src https://deb.nodesource.com/node_6.x stretch main' >> /etc/apt/sources.list.d/nodesource.list && \
+    apt-get update && \
+    apt-get install nodejs=6.*
+
+RUN npm install --global semver@5.3.0
 
 RUN wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
-
-USER root
-RUN sudo echo 'circleci ALL=(ALL:ALL) NOPASSWD: ALL' > /etc/sudoers.d/50-circleci
-USER circleci
 
 ADD entrypoint.sh /usr/local/bin/entrypoint.sh
 

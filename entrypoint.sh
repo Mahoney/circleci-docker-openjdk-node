@@ -18,7 +18,7 @@ function addGroup {
   local name=$2
 
   set +e
-  sudo groupadd -o -g "$id" "$name" > /dev/null 2>&1
+  groupadd -o -g "$id" "$name" > /dev/null 2>&1
   result=$?
   set -e
   if [[ ("$result" == 0) ]]; then
@@ -35,24 +35,19 @@ function addUser {
   local name=$2
   local group_id=$3
   local group_name=$4
-  local other_groups=${@:5}
+  local all_groups=$5
 
   if id -u $name > /dev/null 2>&1; then
-    local existing_id=$(id -u $name)
-    if [ $existing_id != $id ]; then
-      sudo usermod -u $id $name
-      sudo find / -user $existing_id -exec chown -h $id {} \;
-    fi
-    sudo usermod -G "${group_name},${other_groups}" $name
+    usermod -G ${all_groups} $name
   else
-    sudo useradd -M -g $group_id -u "$id" -G $other_groups $name
+    useradd -M -g $group_id -u "$id" -G $all_groups $name
     if [ ! -e "/home/$name" ]; then
-      sudo mkdir -p "/home/$name"
+      mkdir -p "/home/$name"
     fi
     if [ -d "/home/$name" ]; then
-      sudo chown "$name" "/home/$name"
-      sudo chgrp "$group_id" "/home/$name"
-      sudo chmod 755 "/home/$name"
+      chown "$name" "/home/$name"
+      chgrp "$group_id" "/home/$name"
+      chmod 755 "/home/$name"
     fi
   fi
 }
@@ -86,11 +81,12 @@ if [ -n "${ID_DATA:-}" ]; then
     joinedGroupIds=$(join_by , ${group_ids[@]})
     currentUserGroupIds=$(id -G)
     currentUserGroupIdsJoined=$(join_by , ${currentUserGroupIds[@]})
-    addUser $parsedUserData $parsedGroupData "$joinedGroupIds,$currentUserGroupIds"
+    allGroupsToJoin=$(join_by , $joinedGroupIds $currentUserGroupIds)
+    addUser $parsedUserData $parsedGroupData "$allGroupsToJoin"
 
     username=$(echo $parsedUserData | cut -d' ' -f2)
 
-    sudo -u $username bash -c "$*"
+    su $username bash -c "$*"
 else
   $@
 fi
