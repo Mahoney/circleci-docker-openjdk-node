@@ -18,4 +18,4 @@ jobs:
      - deploy:
          command: ./bash_libs/tag-version.sh > ~/.build_version
      - deploy:
-         command: ./bash_libs/deploy-to-repo.sh "${DOCKER_ARTIFACT}:latest" "$(cat ~/.build_version)" > ~/.docker_image_versioned
+         command: ./bash_libs/deploy-to-repo.sh "${DOCKER_ARTIFACT}:latest" "$(cat ~/.build_version)"
