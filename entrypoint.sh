@@ -18,7 +18,7 @@ function addGroup {
   local name=$2
 
   set +e
-  groupadd -o -g "$id" "$name" > /dev/null 2>&1
+  groupadd -o -g "$id" "$name" >/dev/null 2>&1
   result=$?
   set -e
   if [[ ("$result" == 0) ]]; then
@@ -37,7 +37,7 @@ function addUser {
   local group_name=$4
   local all_groups=$5
 
-  if id -u $name > /dev/null 2>&1; then
+  if id -u $name >/dev/null 2>&1; then
     usermod -G ${all_groups} $name
   else
     useradd -M -g $group_id -u "$id" -G $all_groups $name

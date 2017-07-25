@@ -3,7 +3,7 @@ FROM openjdk:8u131
 RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90circleci && \
     echo 'DPkg::Options "--force-confnew";' >> /etc/apt/apt.conf.d/90circleci  && \
     apt-get update && \
-    apt-get install apt-transport-https lsb-release > /dev/null 2>&1
+    apt-get install apt-transport-https lsb-release
 
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add - && \
     echo "deb https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list && \
