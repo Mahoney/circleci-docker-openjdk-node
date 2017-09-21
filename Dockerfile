@@ -26,7 +26,8 @@ RUN wget -qO- https://cli-assets.heroku.com/install-ubuntu.sh | sh
 
 RUN curl -fsSL --output /tmp/flyway-commandline-4.2.0.zip https://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/4.2.0/flyway-commandline-4.2.0.zip && \
     unzip /tmp/flyway-commandline-4.2.0.zip -d /usr/local/ && \
-    ln -s /usr/local/flyway-4.2.0/flyway /usr/bin/flyway
+    ln -s /usr/local/flyway-4.2.0/flyway /usr/bin/flyway && \
+    chmod oug+x /usr/local/flyway-4.2.0/flyway
 
 ADD entrypoint.sh /usr/local/bin/entrypoint.sh
 
