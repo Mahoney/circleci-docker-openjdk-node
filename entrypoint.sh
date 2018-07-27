@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
 set -ueo pipefail
+IFS=$'\n\t'
 
 group_ids_to_add=()
-
-function valueOf {
-  echo "$1" | cut -d'=' -f2
-}
 
 function parseNameId {
   local input=$1
@@ -16,9 +13,10 @@ function parseNameId {
 function addGroup {
   local id=$1
   local name=$2
+  local name_without_spaces=$(echo "$name" | tr " " "_")
 
   set +e
-  groupadd -o -g "$id" "$name" >/dev/null 2>&1
+  groupadd -o -g "$id" "$name_without_spaces" >/dev/null 2>&1
   result=$?
   set -e
   if [[ ("$result" == 0) ]]; then
@@ -26,7 +24,7 @@ function addGroup {
   elif [[ ("$result" == 9) ]]; then
     local actual_id=$(getent group $name | cut -d':' -f3)
     group_ids+=("$actual_id")
-    addGroup "$id" "${name}__$RANDOM"
+    addGroup "$id" "${name_without_spaces}__$RANDOM"
   fi
 }
 
@@ -54,9 +52,16 @@ function addUser {
 
 function getField {
   local data=$1
-  local index=$2
+  local fieldName=$2
 
-  valueOf $(echo "$1" | cut -d' ' -f$index)
+  local idNamePattern="[0-9]+\([^)]+\)"
+  local regex="$fieldName=($idNamePattern(,$idNamePattern)*)"
+
+  if [[ ${data} =~ $regex ]]; then
+    echo "${BASH_REMATCH[1]}"
+  else
+    return 1
+  fi
 }
 
 function join_by {
@@ -66,12 +71,12 @@ function join_by {
 }
 
 if [ -n "${ID_DATA:-}" ]; then
-    user_data=$(getField "$ID_DATA" 1)
-    group_data=$(getField "$ID_DATA" 2)
-    groups_data=$(getField "$ID_DATA" 3)
+    user_data=$(getField "$ID_DATA" "uid")
+    group_data=$(getField "$ID_DATA" "gid")
+    groups_data=$(getField "$ID_DATA" "groups")
 
     groups=$(echo $groups_data | tr ',', '\n')
-    for group in $groups; do
+    for group in ${groups}; do
       addGroup $(parseNameId "$group")
     done
 
@@ -82,7 +87,7 @@ if [ -n "${ID_DATA:-}" ]; then
     currentUserGroupIds=$(id -G)
     currentUserGroupIdsJoined=$(join_by , ${currentUserGroupIds[@]})
     allGroupsToJoin=$(join_by , $joinedGroupIds $currentUserGroupIds)
-    addUser $parsedUserData $parsedGroupData "$allGroupsToJoin"
+    addUser ${parsedUserData} ${parsedGroupData} "$allGroupsToJoin"
 
     username=$(echo $parsedUserData | cut -d' ' -f2)
 
