@@ -34,4 +34,5 @@ ADD entrypoint.sh /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 # Should always be the last line as it is the one that will change most regularly
-ADD bash_libs /home/circleci/bash_libs
+ADD bash_libs /usr/local/bash_libs
+RUN chmod oug+x /usr/local/bash_libs/*
