@@ -21,7 +21,7 @@ fi
 
 heroku_docker_registry="registry.heroku.com"
 
-docker login -u "$DOCKER_ID" -p "$DOCKER_PASSWORD" "$heroku_docker_registry"
+echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin "$heroku_docker_registry"
 
 set +e
 docker pull "$docker_image_versioned"
