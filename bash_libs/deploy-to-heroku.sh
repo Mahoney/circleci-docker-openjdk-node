@@ -30,6 +30,7 @@ set -e
 web_tag="${heroku_docker_registry}/${heroku_project}/web"
 docker tag "$docker_image_versioned" "$web_tag"
 docker push "$web_tag"
+heroku container:release web -a "$heroku_project}"
 
 if [ "$new_env" = true ] ; then
   heroku ps:scale web=1:Hobby -a "$heroku_project"
