@@ -10,15 +10,6 @@ jobs:
    steps:
      - checkout
      - setup_remote_docker
-     - restore_cache:
-         keys:
-           - docker_v1-openjdk:8u131
-           - docker_v1
-     - run: ./bash_libs/cache-docker.sh openjdk:8u131
-     - save_cache:
-         key: docker_v1-openjdk:8u131
-         paths:
-           - /home/circleci/.dockercache
      - run: |
          git config --global user.email "circleci@example.com"
          git config --global user.name "Circle CI"

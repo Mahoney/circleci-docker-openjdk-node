@@ -1,4 +1,4 @@
-FROM openjdk:8u131
+FROM openjdk:11.0.2
 
 RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90circleci && \
     echo 'DPkg::Options "--force-confnew";' >> /etc/apt/apt.conf.d/90circleci  && \
